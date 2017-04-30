@@ -47,7 +47,7 @@ int main(void) {
   for( ;; ) {
 
     adc_refresh();
-    step = adc_read( 2 );
+    step = adc_read( 1 );
 
     if( ACSR & ( 1 << ACI ) ) {
       tick = 0;
