@@ -30,8 +30,8 @@ int main(void) {
 
   // comparator setup
   ADCSRB &= ~( 1 << ACME ); // no multiplex
-  ACSR = 3 << ACIS0; // detect rising edge
-  DIDR0 |= 0b11; // disable digital
+  ACSR = ( 3 << ACIS0 ) | ( 1 << ACBG ); // detect rising edge, bandgap as positive input
+  // DIDR0 |= 0b11; // disable digital
 
   unsigned char mux = (0 << REFS0) | (1 << ADLAR) | (0b10 << MUX0);
   unsigned char start = (1 << ADEN) | (1 << ADSC) | (0b110 << ADPS0);
@@ -39,7 +39,7 @@ int main(void) {
   unsigned long step = 0x0FFFF;
   unsigned long duty = 32000;
 
-  setOutput( 2 );
+  setOutput( 0 );
 
   unsigned long tick = 0;
 
@@ -62,9 +62,9 @@ int main(void) {
     }
     tick += step;
     if( tick < duty ) {
-      setPin( 2, 1 );
+      setPin( 0, 1 );
     } else {
-      setPin( 2, 0 );
+      setPin( 0, 0 );
     }
   }
 
