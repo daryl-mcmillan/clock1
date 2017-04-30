@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
+#include "adc.h"
 
 // 0-1023
 unsigned short analogRead( char pin ) {
@@ -44,6 +45,9 @@ int main(void) {
   unsigned long tick = 0;
 
   for( ;; ) {
+
+    adc_refresh();
+    step = adc_read( 2 );
 
     if( ACSR & ( 1 << ACI ) ) {
       tick = 0;

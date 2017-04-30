@@ -3,6 +3,7 @@ PROCESSOR=attiny13a
 LDFLAGS=-mmcu=$(PROCESSOR)
 CXX=avr-gcc
 CC=avr-gcc
+AS=avr-as
 PROGRAMMER_PROCESSOR=t13
 
 PROGNAME=main
@@ -17,9 +18,11 @@ upload: $(PROGNAME).hex
 fuse:
 	avrdude -V -cavrisp -p$(PROGRAMMER_PROCESSOR) -P$(COMPORT) -b19200 -Ulfuse:w:0x7a:m -Uhfuse:w:0xff:m
 
-main.o: main.cc
+main.o: main.cc adc.h
 
-$(PROGNAME): main.o
+adc.o: adc.S
+
+$(PROGNAME): main.o adc.o
 
 clean:
 	$(RM) *.hex
