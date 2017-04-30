@@ -34,8 +34,8 @@ int main(void) {
   ACSR = ( 3 << ACIS0 ) | ( 1 << ACBG ); // detect rising edge, bandgap as positive input
   // DIDR0 |= 0b11; // disable digital
 
-  unsigned char mux = (0 << REFS0) | (1 << ADLAR) | (0b10 << MUX0);
-  unsigned char start = (1 << ADEN) | (1 << ADSC) | (0b110 << ADPS0);
+  //unsigned char mux = (0 << REFS0) | (1 << ADLAR) | (0b10 << MUX0);
+  //unsigned char start = (1 << ADEN) | (1 << ADSC) | (0b110 << ADPS0);
 
   unsigned long step = 0x0FFFF;
   unsigned long duty = 32000;
@@ -47,23 +47,15 @@ int main(void) {
   for( ;; ) {
 
     adc_refresh();
-    step = adc_read( 1 );
+    step = 0xFFFF;
+    duty = adc_read( 2 );
+    duty = duty << 16;
 
     if( ACSR & ( 1 << ACI ) ) {
       tick = 0;
       ACSR |= 1 << ACI; // clear by writing 1 (!)
     }
 
-    if( ADCSRA & ( 1 << ADSC ) ) {
-      
-    } else {
-      // read adc
-      duty = ADC;
-      duty = duty << 16;
-      // restart adc
-      ADMUX = mux;
-      ADCSRA = start;
-    }
     tick += step;
     if( tick < duty ) {
       setPin( 0, 1 );
