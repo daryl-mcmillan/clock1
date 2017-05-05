@@ -14,11 +14,20 @@ adc_values:
 
 .global adc_refresh
 .global adc_read
+
+adc_refresh_skip:
+
+  ; nop to match the adc read time
+  .rept 19
+  nop
+  .endr
+  ret
+
 adc_refresh: ; (no args)
 
   ; conversion in progress -- return
   sbic ADCSRA, 6
-  ret
+  rjmp adc_refresh_skip
 
   ; if a value is ready
 
